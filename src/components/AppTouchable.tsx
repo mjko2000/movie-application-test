@@ -2,7 +2,7 @@ import {TouchableOpacity, StyleProp, ViewStyle} from 'react-native';
 import React from 'react';
 
 type AppTouchableProps = React.PropsWithChildren<{
-  onPress: () => void;
+  onPress?: () => void;
   style?: StyleProp<ViewStyle>;
   disabled?: boolean;
 }>;

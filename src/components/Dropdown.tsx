@@ -1,4 +1,12 @@
-import {StyleSheet, Text, View, Modal} from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  Modal,
+  StyleProp,
+  ViewStyle,
+  TextStyle,
+} from 'react-native';
 import React, {useState, useRef, memo} from 'react';
 import FontAwesome from '@react-native-vector-icons/fontawesome';
 import AppTouchable from './AppTouchable';
@@ -15,6 +23,8 @@ interface SelectProps {
   onSelect: (value: string) => void;
   placeholder?: string;
   value?: string;
+  containerStyle?: StyleProp<ViewStyle>;
+  placeholderStyle?: StyleProp<TextStyle>;
 }
 
 const Dropdown = ({
@@ -22,6 +32,8 @@ const Dropdown = ({
   onSelect,
   placeholder = 'Select an option',
   value,
+  containerStyle,
+  placeholderStyle,
 }: SelectProps) => {
   const [show, setShow] = useState(false);
   const [selectedValue, setSelectedValue] = useState<string | null>(
@@ -50,7 +62,7 @@ const Dropdown = ({
   };
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, containerStyle]}>
       <View
         ref={buttonRef}
         onLayout={measureButton}
@@ -61,7 +73,7 @@ const Dropdown = ({
             setShow(true);
           }}
           style={[styles.button, show && styles.activeButton]}>
-          <Text style={styles.buttonText}>
+          <Text style={[styles.buttonText, placeholderStyle]} numberOfLines={1}>
             {selectedValue
               ? options.find(opt => opt.value === selectedValue)?.label
               : placeholder}
@@ -119,7 +131,6 @@ export default memo(Dropdown);
 
 const styles = StyleSheet.create({
   container: {
-    width: '100%',
     backgroundColor: 'white',
     borderRadius: 8,
     ...Shadow.normal,

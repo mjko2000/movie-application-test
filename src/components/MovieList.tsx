@@ -7,22 +7,29 @@ type MovieListProps = {
   movies: IMovie[];
   onMoviePress?: (movie: IMovie) => void;
   onRemove?: (movie: IMovie) => void;
+  renderTop?: () => React.ReactNode;
+  renderEmpty?: () => React.ReactNode;
 };
 
-const MovieList = ({movies, onMoviePress, onRemove}: MovieListProps) => {
+const MovieList = ({
+  movies,
+  onMoviePress,
+  onRemove,
+  renderTop,
+  renderEmpty,
+}: MovieListProps) => {
+  const renderItem = ({item}: {item: IMovie}) => (
+    <MovieItem movie={item} onPress={onMoviePress} onRemove={onRemove} />
+  );
   return (
     <FlatList
       data={movies}
       keyExtractor={item => item.id.toString()}
-      renderItem={({item}) => (
-        <MovieItem
-          movie={item}
-          onPress={() => onMoviePress && onMoviePress(item)}
-          onRemove={onRemove}
-        />
-      )}
+      ListHeaderComponent={renderTop}
+      renderItem={renderItem}
       contentContainerStyle={styles.list}
       showsVerticalScrollIndicator={false}
+      ListEmptyComponent={renderEmpty}
     />
   );
 };

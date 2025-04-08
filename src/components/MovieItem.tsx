@@ -10,11 +10,12 @@ import {
 import Colors from '../constant/colors';
 import Shadow from '../constant/shadow';
 import {IMovie} from '../types';
-
+import FontAwesome from '@react-native-vector-icons/fontawesome';
+import AppTouchable from './AppTouchable';
 type MovieItemProps = {
   movie: IMovie;
-  onPress?: () => void;
-  onRemove?: () => void;
+  onPress?: (movie: IMovie) => void;
+  onRemove?: (movie: IMovie) => void;
 };
 
 const MovieItem = ({movie, onPress, onRemove}: MovieItemProps) => {
@@ -24,24 +25,26 @@ const MovieItem = ({movie, onPress, onRemove}: MovieItemProps) => {
     year: 'numeric',
   });
   return (
-    <TouchableOpacity
-      style={styles.container}
-      onPress={onPress}
-      activeOpacity={0.8}>
+    <AppTouchable style={styles.container} onPress={() => onPress?.(movie)}>
       <Image source={{uri: movie.imageUrl}} style={styles.image} />
       <View style={styles.content}>
-        <Text style={styles.title}>{movie.title}</Text>
+        <View style={styles.titleRow}>
+          <Text style={styles.title}>{movie.title}</Text>
+          {onRemove && (
+            <TouchableOpacity
+              style={styles.removeButton}
+              onPress={() => onRemove(movie)}
+              hitSlop={{top: 10, bottom: 10, left: 10, right: 10}}>
+              <FontAwesome name="times" size={16} color={Colors.gray} />
+            </TouchableOpacity>
+          )}
+        </View>
         <Text style={styles.date}>{date}</Text>
         <Text style={styles.description} numberOfLines={2}>
           {movie.description}
         </Text>
       </View>
-      {onRemove && (
-        <TouchableOpacity onPress={onRemove}>
-          <Text>Remove</Text>
-        </TouchableOpacity>
-      )}
-    </TouchableOpacity>
+    </AppTouchable>
   );
 };
 
@@ -72,11 +75,20 @@ const styles = StyleSheet.create({
     borderBottomRightRadius: 8,
     borderColor: Colors.border,
   },
+  titleRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+  },
   title: {
+    flex: 1,
     fontSize: 18,
     fontWeight: 'bold',
     color: Colors.text,
     marginBottom: 4,
+  },
+  removeButton: {
+    padding: 4,
   },
   date: {
     fontSize: 14,
